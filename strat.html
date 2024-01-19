@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bymatt</title>
+</head>
+<body>
+
+<input type="file" id="pdfInput" accept=".pdf">
+<button onclick="handleFile()">Cargar PDF</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+<script>
+  async function handleFile() {
+    const input = document.getElementById('pdfInput');
+    const file = input.files[0];
+
+    if (file) {
+      const fileReader = new FileReader();
+
+      fileReader.onload = async function () {
+        const typedArray = new Uint8Array(this.result);
+        const pdfDocument = await pdfjsLib.getDocument({ data: typedArray }).promise;
+
+        // Obtener metadatos
+        const metadata = await pdfDocument.getMetadata();
+
+        // Mostrar metadatos en consola
+        console.log('Metadatos del PDF:', metadata);
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    }
+  }
+</script>
+
+</body>
+</html>
